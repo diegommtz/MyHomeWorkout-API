@@ -20,9 +20,10 @@ module.exports.GetRutina = (req, res) => {
 
     //Obtener el id de registro
     let idRutina = req.params.idRutina;
-    
+
     //Query para buscar por id
     let query = db.collection('rutina').doc(idRutina);
+    let queryEjercicios = db.collection('rutina').doc(idRutina).collection('ejercicios');
 
     query.get().then(snapshot => {
 
@@ -34,7 +35,26 @@ module.exports.GetRutina = (req, res) => {
             rutina = snapshot.data();
             rutina['id'] = snapshot.id;
 
-            res.json(rutina);
+            queryEjercicios.get().then(snapshotEjercicios => {
+
+                //Crear arreglo que contendrá los ejercicios
+                let registros = [];
+                let ejercicio;
+
+                //Llenar el arreglo
+                snapshotEjercicios.forEach((doc) => {
+                    ejercicio = doc.data();
+                    ejercicio['id'] = doc.id;
+                    registros.push(ejercicio);
+                });
+
+                rutina['ejercicios'] = registros;
+                res.json(rutina);
+
+            }).catch(err => {
+                res.json('Error getting document', err);
+            });
+
         }
     }).catch(err => {
         res.json('Error getting document', err);
@@ -70,7 +90,7 @@ module.exports.GetAllRutinas = (req, res) => {
 }
 
 module.exports.UpdateRutina = (req, res) => {
-    
+
     //Obtener el id de registro
     let idRutina = req.body.id;
 
