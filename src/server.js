@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 
 const fotoRoute = require('./routes/foto.route');
 const horarioRoute = require('./routes/horario.route');
+const musculoRoute = require('./routes/musculo.route');
 const objetivoRoute = require('./routes/objetivo.route');
 const personaRoute = require('./routes/persona.route');
 
@@ -37,6 +38,7 @@ app.use(cors());
 //********** Rutas ***********/
 app.use('/foto', fotoRoute);
 app.use('/horario', horarioRoute);
+app.use('/musculo', musculoRoute);
 app.use('/objetivo', objetivoRoute);
 app.use('/persona', personaRoute);
 
