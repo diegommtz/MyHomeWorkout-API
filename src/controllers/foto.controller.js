@@ -46,7 +46,7 @@ module.exports.GetFotoPersona = (req, res) => {
 module.exports.GetFotosPersona = (req, res) => {
 
     //Obtener el id del registro
-    let idFoto = req.params.idFoto;
+    let idFoto = req.params.idPersona;
 
     //Query para buscar todos los registros de una colección
     let query = db.collection('foto').doc(idFoto).collection('fecha');
