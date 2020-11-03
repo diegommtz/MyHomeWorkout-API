@@ -11,6 +11,7 @@ const horarioRoute = require('./routes/horario.route');
 const musculoRoute = require('./routes/musculo.route');
 const objetivoRoute = require('./routes/objetivo.route');
 const personaRoute = require('./routes/persona.route');
+const rutinaRoute = require('./routes/rutina.route');
 
 
 //********** Servidor ***********/
@@ -43,6 +44,7 @@ app.use('/horario', horarioRoute);
 app.use('/musculo', musculoRoute);
 app.use('/objetivo', objetivoRoute);
 app.use('/persona', personaRoute);
+app.use('/rutina', rutinaRoute);
 
 
 //********** Global variables ***********/
