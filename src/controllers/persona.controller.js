@@ -1,11 +1,15 @@
+const bcrypt = require('bcrypt');
+
 const db = require('../database/database').dbFirestore;
 
 module.exports.CreatePersona = (req, res) => {
 
+    let password = bcrypt.hashSync(req.body.contrasena, 10);
+
     //Valores a insertar
     const dataValues = {
         nombre: req.body.nombre,
-        contrasena: req.body.contrasena,
+        contrasena: password,
         altura: req.body.altura,
         genero: req.body.genero,
         nacimiento: req.body.nacimiento,
@@ -19,6 +23,38 @@ module.exports.CreatePersona = (req, res) => {
         res.json(ref.id);
     });
 
+}
+
+module.exports.Login = (req, res) => {
+    let nombre = req.params.nombrePersona;
+    let contrasena = req.body.contrasena;
+
+    let query = db.collection('persona').where('nombre', '==', nombre);
+
+    query.get().then(snapshot => {
+        if (snapshot.empty) {
+            res.json("El registro no existe");
+        }
+        else {
+
+            snapshot.forEach(doc => {
+
+                let persona = doc.data();
+                persona["idPersona"] = doc.id;
+                
+                let match = bcrypt.compareSync(contrasena, doc.data().contrasena);
+
+                if (match) {                 
+                    res.json(persona);
+                }
+                else {
+                    res.json('El registro no existe');
+                }                
+            });
+        }
+    }).catch(err => {
+        res.json('Error getting document', err);
+    });
 }
 
 module.exports.GetPersona = (req, res) => {
