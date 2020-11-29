@@ -32,7 +32,7 @@ module.exports.GetPersona = (req, res) => {
         else {
             let persona;
             persona = snapshot.data();
-            persona['id'] = snapshot.id;
+            persona['idPersona'] = snapshot.id;
 
             res.json(persona);
         }
@@ -57,7 +57,7 @@ module.exports.GetAllPersonas = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 persona = doc.data();
-                persona['id'] = doc.id;
+                persona['idPersona'] = doc.id;
                 registros.push(persona);
             });
 
@@ -72,7 +72,7 @@ module.exports.GetAllPersonas = (req, res) => {
 module.exports.UpdatePersona = (req, res) => {
     
     //Obtener el id de registro
-    let idPersona = req.body.id;
+    let idPersona = req.body.idPersona;
 
     //Valores a actualizar
     const dataValues = {

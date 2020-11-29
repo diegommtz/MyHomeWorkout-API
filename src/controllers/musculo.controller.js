@@ -32,7 +32,7 @@ module.exports.GetMusculo = (req, res) => {
         else {
             let musculo;
             musculo = snapshot.data();
-            musculo['id'] = snapshot.id;
+            musculo['idMusculo'] = snapshot.id;
 
             res.json(musculo);
         }
@@ -57,7 +57,7 @@ module.exports.GetAllMusculos = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 musculo = doc.data();
-                musculo['id'] = doc.id;
+                musculo['idMusculo'] = doc.id;
                 registros.push(musculo);
             });
 
@@ -72,7 +72,7 @@ module.exports.GetAllMusculos = (req, res) => {
 module.exports.UpdateMusculo = (req, res) => {
     
     //Obtener el id de registro
-    let idMusculo = req.body.id;
+    let idMusculo = req.body.idMusculo;
 
     //Valores a actualizar
     const dataValues = {

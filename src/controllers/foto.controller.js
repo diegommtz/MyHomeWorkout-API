@@ -34,7 +34,7 @@ module.exports.GetFotoPersona = (req, res) => {
         else {
             let foto;
             foto = snapshot.data();
-            foto['id'] = snapshot.id;
+            foto['idFoto'] = snapshot.id;
 
             res.json(foto);
         }
@@ -62,7 +62,7 @@ module.exports.GetFotosPersona = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 foto = doc.data();
-                foto['id'] = doc.id;
+                foto['idFoto'] = doc.id;
                 registros.push(foto);
             });
 

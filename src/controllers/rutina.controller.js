@@ -33,7 +33,7 @@ module.exports.GetRutina = (req, res) => {
         else {
             let rutina;
             rutina = snapshot.data();
-            rutina['id'] = snapshot.id;
+            rutina['idRutina'] = snapshot.id;
 
             queryEjercicios.get().then(snapshotEjercicios => {
 
@@ -44,7 +44,7 @@ module.exports.GetRutina = (req, res) => {
                 //Llenar el arreglo
                 snapshotEjercicios.forEach((doc) => {
                     ejercicio = doc.data();
-                    ejercicio['id'] = doc.id;
+                    ejercicio['idEjercicio'] = doc.id;
                     registros.push(ejercicio);
                 });
 
@@ -77,7 +77,7 @@ module.exports.GetAllRutinas = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 rutina = doc.data();
-                rutina['id'] = doc.id;
+                rutina['idRutina'] = doc.id;
                 registros.push(rutina);
             });
 
@@ -92,7 +92,7 @@ module.exports.GetAllRutinas = (req, res) => {
 module.exports.UpdateRutina = (req, res) => {
 
     //Obtener el id de registro
-    let idRutina = req.body.id;
+    let idRutina = req.body.idRutina;
 
     //Valores a actualizar
     const dataValues = {

@@ -32,7 +32,7 @@ module.exports.GetObjetivo = (req, res) => {
         else {
             let objetivo;
             objetivo = snapshot.data();
-            objetivo['id'] = snapshot.id;
+            objetivo['idObjetivo'] = snapshot.id;
 
             res.json(objetivo);
         }
@@ -57,7 +57,7 @@ module.exports.GetAllObjetivos = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 objetivo = doc.data();
-                objetivo['id'] = doc.id;
+                objetivo['idObjetivo'] = doc.id;
                 registros.push(objetivo);
             });
 
@@ -72,7 +72,7 @@ module.exports.GetAllObjetivos = (req, res) => {
 module.exports.UpdateObjetivo = (req, res) => {
     
     //Obtener el id de registro
-    let idObjetivo = req.body.id;
+    let idObjetivo = req.body.idObjetivo;
 
     //Valores a actualizar
     const dataValues = {

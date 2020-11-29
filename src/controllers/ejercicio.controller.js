@@ -32,7 +32,9 @@ module.exports.GetEjercicio = (req, res) => {
         else {
             let ejercicio;
             ejercicio = snapshot.data();
-            ejercicio['id'] = snapshot.id;
+            ejercicio['idEjercicio'] = snapshot.id;
+            
+            //CAMBIAR CADA ID DE MÚSCULO POR EL OBJETO CORRESPONDIENTE
 
             res.json(ejercicio);
         }
@@ -57,7 +59,7 @@ module.exports.GetAllEjercicios = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 ejercicio = doc.data();
-                ejercicio['id'] = doc.id;
+                ejercicio['idEjercicio'] = doc.id;
                 registros.push(ejercicio);
             });
 
@@ -72,7 +74,7 @@ module.exports.GetAllEjercicios = (req, res) => {
 module.exports.UpdateEjercicio = (req, res) => {
     
     //Obtener el id de registro
-    let idEjercicio = req.body.id;
+    let idEjercicio = req.body.idEjercicio;
 
     //Valores a actualizar
     const dataValues = {

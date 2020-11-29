@@ -40,7 +40,7 @@ module.exports.GetHorario = (req, res) => {
         else {
             let horario;
             horario = snapshot.data();
-            horario['id'] = snapshot.id;
+            horario['idHorario'] = snapshot.id;
 
             res.json(horario);
         }
@@ -51,7 +51,6 @@ module.exports.GetHorario = (req, res) => {
 
 module.exports.GetAllHorarios = (req, res) => {
 
-    console.log("hola");
     //Query para buscar todos los registros de una colección
     let query = db.collection('horario');
 
@@ -68,7 +67,7 @@ module.exports.GetAllHorarios = (req, res) => {
             //Llenar el arreglo
             snapshot.forEach((doc) => {
                 horario = doc.data();
-                horario['id'] = doc.id;
+                horario['idHorario'] = doc.id;
                 registros.push(horario);
             });
 
@@ -83,7 +82,7 @@ module.exports.GetAllHorarios = (req, res) => {
 module.exports.UpdateHorario = (req, res) => {
     
     //Obtener el id de registro
-    let idHorario = req.body.id;
+    let idHorario = req.body.idHorario;
 
     //Valores a actualizar
     const dataValues = {
