@@ -26,6 +26,7 @@ module.exports.GetRutina = (req, res) => {
     let queryEjercicios = db.collection('rutina').doc(idRutina).collection('ejercicios');
     let queryObjetivo;
     let queryEjercicioInfo;
+    let queryMusculo;
 
     query.get().then(snapshot => {
 
@@ -50,7 +51,7 @@ module.exports.GetRutina = (req, res) => {
                     let ejercicio;
 
                     let ejerciciosSize = snapshotEjercicios.size;
-                    let currSize = 0;                    
+                    let currSize = 0;
 
                     //Llenar el arreglo
                     snapshotEjercicios.forEach((doc) => {
@@ -60,29 +61,61 @@ module.exports.GetRutina = (req, res) => {
                         queryEjercicioInfo = db.collection('ejercicio').doc(doc.id);
                         queryEjercicioInfo.get().then(ejSnapShot => {
 
-                            const result = Object.assign({}, ejSnapShot.data(), ejercicio);
-                            registros.push(result);
+                            let ejObj2 = ejSnapShot.data();
+                            let musculosIDs = ejObj2.musculos;
+                            ejObj2['musculos'] = [];
 
-                            //console.log(result);
-                            //console.log(ejerciciosSize);
-                            rutina['ejercicios'] = registros;
+                            let musculosSize = Object.keys(musculosIDs).length;
 
-                            currSize++;
-                            
-                            if(currSize == ejerciciosSize)
-                                res.json(rutina);
+                            let lastId;
+                            let muscIdArray = [];
+                            for (let i = 1; i <= musculosSize; i++) {
+                                muscIdArray.push(musculosIDs[i]);
 
-                        }).catch(err => {
-                            res.json('Error getting document', err);
-                        });                        
+                                if (i == musculosSize)
+                                    lastId = musculosIDs[i];
+                            }
+
+                            //CAMBIAR CADA ID DE MÚSCULO POR EL OBJETO CORRESPONDIENTE                        
+                            muscIdArray.forEach((id) => {
+
+                                queryMusculo = db.collection('musculo').doc(id);
+
+                                queryMusculo.get().then(snapshotMusculo => {
+
+                                    if (!snapshotMusculo.exists) {
+                                        res.json("El registro no existe");
+                                    }
+                                    else {
+                                        let musculo;
+                                        musculo = snapshotMusculo.data();
+                                        musculo['idMusculo'] = snapshotMusculo.id;
+
+                                        //Agregar a musculo JSON    
+                                        ejObj2.musculos.push(musculo);
+
+                                        if (lastId == id) {
+                                            const result = Object.assign({}, ejObj2, ejercicio);
+                                            registros.push(result);
+                                            rutina['ejercicios'] = registros;
+                                            currSize++;
+
+                                            console.log(result);
+
+                                            if (currSize == ejerciciosSize)
+                                                res.json(rutina);
+                                        }
+
+                                        //res.json(ejercicio);
+
+                                    }
+                                });
+                            });
+                        });
                     });
 
-                }).catch(err => {
-                    res.json('Error getting document', err);
                 });
 
-            }).catch(err => {
-                res.json('Error getting document', err);
             });
         }
     }).catch(err => {
