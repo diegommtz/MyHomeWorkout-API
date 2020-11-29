@@ -4,8 +4,13 @@ module.exports.CreatePersona = (req, res) => {
 
     //Valores a insertar
     const dataValues = {
-        persona: req.body.persona,
-        respuesta: req.body.respuesta
+        nombre: req.body.persona,
+        contrasena: req.body.contrasena,
+        altura: req.body.altura,
+        genero: req.body.genero,
+        nacimiento: req.body.nacimiento,
+        objetivo: req.body.objetivo,
+        peso: req.body.peso        
     };
 
     //Agregar registro con id autogenerado
