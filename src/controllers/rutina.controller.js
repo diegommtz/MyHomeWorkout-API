@@ -25,6 +25,7 @@ module.exports.GetRutina = (req, res) => {
     let query = db.collection('rutina').doc(idRutina);
     let queryEjercicios = db.collection('rutina').doc(idRutina).collection('ejercicios');
     let queryObjetivo;
+    let queryEjercicioInfo;
 
     query.get().then(snapshot => {
 
@@ -48,15 +49,33 @@ module.exports.GetRutina = (req, res) => {
                     let registros = [];
                     let ejercicio;
 
+                    let ejerciciosSize = snapshotEjercicios.size;
+                    let currSize = 0;                    
+
                     //Llenar el arreglo
                     snapshotEjercicios.forEach((doc) => {
                         ejercicio = doc.data();
                         ejercicio['idEjercicio'] = doc.id;
-                        registros.push(ejercicio);
-                    });
 
-                    rutina['ejercicios'] = registros;
-                    res.json(rutina);
+                        queryEjercicioInfo = db.collection('ejercicio').doc(doc.id);
+                        queryEjercicioInfo.get().then(ejSnapShot => {
+
+                            const result = Object.assign({}, ejSnapShot.data(), ejercicio);
+                            registros.push(result);
+
+                            //console.log(result);
+                            //console.log(ejerciciosSize);
+                            rutina['ejercicios'] = registros;
+
+                            currSize++;
+                            
+                            if(currSize == ejerciciosSize)
+                                res.json(rutina);
+
+                        }).catch(err => {
+                            res.json('Error getting document', err);
+                        });                        
+                    });
 
                 }).catch(err => {
                     res.json('Error getting document', err);
