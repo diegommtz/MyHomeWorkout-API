@@ -23,6 +23,7 @@ module.exports.GetPersona = (req, res) => {
     
     //Query para buscar por id
     let query = db.collection('persona').doc(idPersona);
+    let queryObjetivo;
 
     query.get().then(snapshot => {
 
@@ -34,7 +35,22 @@ module.exports.GetPersona = (req, res) => {
             persona = snapshot.data();
             persona['idPersona'] = snapshot.id;
 
-            res.json(persona);
+            queryObjetivo = db.collection('objetivo').doc(persona.objetivo);
+            queryObjetivo.get().then(snapshotObjetivo => {
+                if (!snapshotObjetivo.exists) {
+                    res.json("El registro no existe");
+                }
+                else {
+                    let objetivo;
+                    objetivo = snapshotObjetivo.data();
+                    objetivo['idObjetivo'] = snapshotObjetivo.id;
+        
+                    persona.objetivo = objetivo;
+                    res.json(persona);
+                }
+            }).catch(err => {
+                res.json('Error getting document', err);
+            });
         }
     }).catch(err => {
         res.json('Error getting document', err);

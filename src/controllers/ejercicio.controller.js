@@ -20,9 +20,10 @@ module.exports.GetEjercicio = (req, res) => {
 
     //Obtener el id de registro
     let idEjercicio = req.params.idEjercicio;
-    
+
     //Query para buscar por id
     let query = db.collection('ejercicio').doc(idEjercicio);
+    let queryMusculo;
 
     query.get().then(snapshot => {
 
@@ -33,10 +34,49 @@ module.exports.GetEjercicio = (req, res) => {
             let ejercicio;
             ejercicio = snapshot.data();
             ejercicio['idEjercicio'] = snapshot.id;
-            
-            //CAMBIAR CADA ID DE MÚSCULO POR EL OBJETO CORRESPONDIENTE
 
-            res.json(ejercicio);
+            let musculosIDs = ejercicio.musculos;
+            ejercicio['musculos'] = [];
+
+            let musculosSize = Object.keys(musculosIDs).length;
+
+            let lastId;
+            let muscIdArray = [];
+            for (let i = 1; i <= musculosSize; i++) {
+                muscIdArray.push(musculosIDs[i]);
+
+                if(i == musculosSize)
+                    lastId = musculosIDs[i];
+            }
+
+            //CAMBIAR CADA ID DE MÚSCULO POR EL OBJETO CORRESPONDIENTE                        
+            muscIdArray.forEach((id) => {
+
+                queryMusculo = db.collection('musculo').doc(id);
+                console.log("-----------------");
+                console.log("ID: " + id);
+                console.log("-----------------");
+
+                queryMusculo.get().then(snapshotMusculo => {
+
+                    if (!snapshotMusculo.exists) {
+                        res.json("El registro no existe");
+                    }
+                    else {                    
+                        let musculo;
+                        musculo = snapshotMusculo.data();
+                        musculo['idMusculo'] = snapshotMusculo.id;
+                
+                        //Agregar a musculo JSON    
+                        ejercicio.musculos.push(musculo);    
+                        
+                        if(lastId == id)
+                            res.json(ejercicio);
+                    }
+                }).catch(err => {
+                    res.json('Error getting document', err);
+                });        
+            });
         }
     }).catch(err => {
         res.json('Error getting document', err);
@@ -72,7 +112,7 @@ module.exports.GetAllEjercicios = (req, res) => {
 }
 
 module.exports.UpdateEjercicio = (req, res) => {
-    
+
     //Obtener el id de registro
     let idEjercicio = req.body.idEjercicio;
 
