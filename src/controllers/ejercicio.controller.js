@@ -98,8 +98,12 @@ module.exports.GetAllEjercicios = (req, res) => {
 
             //Llenar el arreglo
             snapshot.forEach((doc) => {
-                ejercicio = doc.data();
+                ejercicio = {}; //doc.data();
                 ejercicio['idEjercicio'] = doc.id;
+                ejercicio['dificultad'] = doc.data().dificultad;
+                ejercicio['focalizacion'] = doc.data().focalizacion;
+                ejercicio['nombre'] = doc.data().nombre;
+                ejercicio['video'] = doc.data().video;
                 registros.push(ejercicio);
             });
 
