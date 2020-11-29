@@ -24,6 +24,7 @@ module.exports.GetRutina = (req, res) => {
     //Query para buscar por id
     let query = db.collection('rutina').doc(idRutina);
     let queryEjercicios = db.collection('rutina').doc(idRutina).collection('ejercicios');
+    let queryObjetivo;
 
     query.get().then(snapshot => {
 
@@ -35,26 +36,35 @@ module.exports.GetRutina = (req, res) => {
             rutina = snapshot.data();
             rutina['idRutina'] = snapshot.id;
 
-            queryEjercicios.get().then(snapshotEjercicios => {
+            queryObjetivo = db.collection('objetivo').doc(rutina.objetivo);
+            queryObjetivo.get().then(snapshotObjetivo => {
 
-                //Crear arreglo que contendrá los ejercicios
-                let registros = [];
-                let ejercicio;
+                rutina.objetivo = snapshotObjetivo.data();
+                rutina.objetivo['idObjetivo'] = snapshotObjetivo.id;
 
-                //Llenar el arreglo
-                snapshotEjercicios.forEach((doc) => {
-                    ejercicio = doc.data();
-                    ejercicio['idEjercicio'] = doc.id;
-                    registros.push(ejercicio);
+                queryEjercicios.get().then(snapshotEjercicios => {
+
+                    //Crear arreglo que contendrá los ejercicios
+                    let registros = [];
+                    let ejercicio;
+
+                    //Llenar el arreglo
+                    snapshotEjercicios.forEach((doc) => {
+                        ejercicio = doc.data();
+                        ejercicio['idEjercicio'] = doc.id;
+                        registros.push(ejercicio);
+                    });
+
+                    rutina['ejercicios'] = registros;
+                    res.json(rutina);
+
+                }).catch(err => {
+                    res.json('Error getting document', err);
                 });
-
-                rutina['ejercicios'] = registros;
-                res.json(rutina);
 
             }).catch(err => {
                 res.json('Error getting document', err);
             });
-
         }
     }).catch(err => {
         res.json('Error getting document', err);
