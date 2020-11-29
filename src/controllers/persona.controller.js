@@ -4,7 +4,7 @@ module.exports.CreatePersona = (req, res) => {
 
     //Valores a insertar
     const dataValues = {
-        nombre: req.body.persona,
+        nombre: req.body.nombre,
         contrasena: req.body.contrasena,
         altura: req.body.altura,
         genero: req.body.genero,
