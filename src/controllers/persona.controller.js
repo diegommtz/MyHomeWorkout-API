@@ -13,7 +13,7 @@ module.exports.CreatePersona = (req, res) => {
         altura: req.body.altura,
         genero: req.body.genero,
         nacimiento: req.body.nacimiento,
-        objetivo: req.body.objetivo,
+        objetivo: req.body.objetivo.idObjetivo,
         peso: req.body.peso        
     };
 

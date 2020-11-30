@@ -1,3 +1,5 @@
+const { storage } = require('firebase-admin');
+
 const db = require('../database/database').dbFirestore;
 
 module.exports.CreateFoto = (req, res) => {
@@ -15,6 +17,43 @@ module.exports.CreateFoto = (req, res) => {
         //Regresar el id del nuevo registro
         res.json(ref.id);
     });
+}
+
+module.exports.SubmitFoto = async (req, res) => {
+    
+    // Obtener el bucket
+    const bucket = storage.bucket();
+
+    // Obtener el archivo
+    const blob = bucket.file(req.file.originalname);
+
+    // Para generar token
+    let uuid = uuidv4();
+
+    // Crear un blobsteam con el archivo 
+    const blobStream = blob.createWriteStream({
+        resumable: false,
+        contentType: req.file.mimetype,
+        metadata: {
+            metadata: {
+                firebaseStorageDownloadTokens: uuid
+            }
+        }
+    });
+
+    blobStream.on('error', err => {
+        next(err);
+    });
+
+    blobStream.on('finish', () => {
+        // The public URL can be used to directly access the file via HTTP.        
+        const publicUrl = encodeURI(`https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${req.file.originalname}?alt=media&token=${uuid}`);
+
+        res.json(publicUrl);
+    });
+
+    blobStream.end(req.file.buffer);
+
 }
 
 module.exports.GetFotoPersona = (req, res) => {
