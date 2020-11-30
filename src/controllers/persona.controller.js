@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const { query } = require('express');
 
 const db = require('../database/database').dbFirestore;
 
@@ -54,6 +55,36 @@ module.exports.Login = (req, res) => {
                     res.json('El registro no existe');
                 }                
             });
+        }
+    }).catch(err => {
+        res.json('Error getting document', err);
+    });
+}
+
+module.exports.AumentarEntrenamiento = (req, res) => {
+
+    console.log("holaaaaaaaaa");
+    let idPersona = req.params.idPersona;
+
+    let query = db.collection('persona').doc(idPersona);
+
+    query.get().then(snapshot => {
+
+        if (!snapshot.exists) {
+            res.json("El registro no existe");
+        }
+        else {
+            let persona;
+            persona = snapshot.data();
+            persona['idPersona'] = snapshot.id;
+
+            let entrenamientos = persona.entrenamientos;
+            entrenamientos++;
+
+            console.log(entrenamientos);
+
+            query.update({entrenamientos: entrenamientos});
+            res.json(idPersona);            
         }
     }).catch(err => {
         res.json('Error getting document', err);
