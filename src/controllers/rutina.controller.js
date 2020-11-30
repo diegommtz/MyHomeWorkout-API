@@ -95,12 +95,15 @@ module.exports.GetRutina = (req, res) => {
                                         ejObj2.musculos.push(musculo);
 
                                         if (lastId == id) {
-                                            const result = Object.assign({}, ejObj2, ejercicio);
+                                            let tempEjercicio = doc.data();
+                                            tempEjercicio['idEjercicio'] = doc.id;
+                                            const result = Object.assign({}, ejObj2, tempEjercicio);
                                             registros.push(result);
                                             rutina['ejercicios'] = registros;
                                             currSize++;
 
                                             console.log(result);
+                                            console.log("----------");
 
                                             if (currSize == ejerciciosSize)
                                                 res.json(rutina);
