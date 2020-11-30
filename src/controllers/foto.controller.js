@@ -1,6 +1,31 @@
 const { storage } = require('firebase-admin');
+const { fieldValue } = require('../database/database');
+//const firebase = require('@firebase/firestore');
 
 const db = require('../database/database').dbFirestore;
+const fv = require('../database/database').fieldValue;
+
+module.exports.CreateNewFoto = (req, res) => {
+    
+    let idUsuario = req.params.idPersona;
+
+    //Valores a insertar
+    const dataValues = {
+        fecha: fieldValue.serverTimestamp(),
+        fotoDerecha: req.body.fotoDerecha,
+        fotoEspalda: req.body.fotoEspalda,
+        fotoFrontal: req.body.fotoFrontal
+    };
+
+    //Agregar registro con id autogenerado
+    db.collection('foto').doc(idUsuario).set({}).then(ref => {
+        
+        db.collection('foto').doc(idUsuario).collection('fecha').add(dataValues).then(ref => {
+            //Regresar el id del nuevo registro
+            res.json(ref.id);
+        })
+    });    
+}
 
 module.exports.CreateFoto = (req, res) => {
 
