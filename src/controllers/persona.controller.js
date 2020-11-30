@@ -28,7 +28,9 @@ module.exports.CreatePersona = (req, res) => {
 
 module.exports.Login = (req, res) => {
     let nombre = req.params.nombrePersona;
-    let contrasena = req.body.contrasena;
+    let contrasena = req.params.contrasena;
+
+    console.log(req.params);
 
     let query = db.collection('persona').where('nombre', '==', nombre);
 
@@ -45,8 +47,8 @@ module.exports.Login = (req, res) => {
                 
                 let match = bcrypt.compareSync(contrasena, doc.data().contrasena);
 
-                if (match) {                 
-                    res.json(persona);
+                if (match) {          
+                    res.json(doc.id);                    
                 }
                 else {
                     res.json('El registro no existe');
