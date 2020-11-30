@@ -14,7 +14,8 @@ module.exports.CreatePersona = (req, res) => {
         genero: req.body.genero,
         nacimiento: req.body.nacimiento,
         objetivo: req.body.objetivo.idObjetivo,
-        peso: req.body.peso        
+        peso: req.body.peso,
+        entrenamientos: req.body.entrenamientos
     };
 
     //Agregar registro con id autogenerado
@@ -133,8 +134,13 @@ module.exports.UpdatePersona = (req, res) => {
 
     //Valores a actualizar
     const dataValues = {
-        persona: req.body.persona,
-        respuesta: req.body.respuesta
+        nombre: req.body.nombre,
+        altura: req.body.altura,
+        genero: req.body.genero,
+        nacimiento: req.body.nacimiento,
+        objetivo: req.body.objetivo.idObjetivo,
+        peso: req.body.peso,
+        entrenamientos: req.body.entrenamientos
     };
 
     //Obtener el registro de la taquería
