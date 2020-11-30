@@ -20,7 +20,7 @@ module.exports.CreateHorario = (req, res) => {
     //Agregar registro con id autogenerado
     db.collection('horario').doc(idHorario).set(dataValues).then(ref => {
         //Regresar el id del nuevo registro
-        res.json(ref.id);
+        res.json(idHorario);
     });
 }
 
